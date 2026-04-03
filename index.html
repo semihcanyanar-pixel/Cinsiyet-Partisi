@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Bebek Cinsiyeti 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #4FC3F7;
+    --blue-deep: #0288D1;
+    --blue-glow: rgba(79,195,247,0.45);
+    --pink: #F48FB1;
+    --pink-deep: #C2185B;
+    --pink-glow: rgba(244,143,177,0.45);
+    --gold: #FFD700;
+    --dark: #0f0720;
+    --mid: #1e0f38;
+    --mid2: #2a1550;
+  }
+
+- { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+width:100%; height:100%;
+overflow:hidden;
+background: var(–dark);
+font-family:‘Quicksand’, sans-serif;
+color:white;
+}
+
+.stars {
+position:fixed; inset:0; pointer-events:none; z-index:0;
+background:
+radial-gradient(1.5px 1.5px at 8% 12%, rgba(255,255,255,.9) 0%, transparent 100%),
+radial-gradient(1px 1px at 22% 35%, rgba(255,255,255,.6) 0%, transparent 100%),
+radial-gradient(1.5px 1.5px at 38% 8%, rgba(255,255,255,.8) 0%, transparent 100%),
+radial-gradient(1px 1px at 55% 20%, rgba(255,255,255,.7) 0%, transparent 100%),
+radial-gradient(1px 1px at 70% 45%, rgba(255,255,255,.5) 0%, transparent 100%),
+radial-gradient(1.5px 1.5px at 82% 15%, rgba(255,255,255,.9) 0%, transparent 100%),
+radial-gradient(1px 1px at 92% 60%, rgba(255,255,255,.6) 0%, transparent 100%),
+radial-gradient(1px 1px at 15% 72%, rgba(255,255,255,.7) 0%, transparent 100%),
+radial-gradient(1.5px 1.5px at 48% 80%, rgba(255,255,255,.8) 0%, transparent 100%),
+radial-gradient(1px 1px at 65% 88%, rgba(255,255,255,.5) 0%, transparent 100%),
+radial-gradient(1px 1px at 30% 92%, rgba(255,255,255,.6) 0%, transparent 100%),
+radial-gradient(1px 1px at 88% 82%, rgba(255,255,255,.7) 0%, transparent 100%);
+}
+
+.particle {
+position:fixed; pointer-events:none; z-index:1;
+border-radius:50%; animation:floatUp linear infinite; opacity:0;
+}
+@keyframes floatUp {
+0%   { transform:translateY(110vh) rotate(0deg); opacity:0; }
+10%  { opacity:.6; }
+90%  { opacity:.2; }
+100% { transform:translateY(-10vh) rotate(360deg); opacity:0; }
+}
+
+.screen {
+position:fixed; inset:0; z-index:10;
+display:flex; align-items:center; justify-content:center;
+transition: opacity .5s ease, transform .5s ease;
+}
+.screen.hidden { opacity:0; pointer-events:none; transform:scale(.97); }
+
+/* ══ SCREEN 1 — INTRO ══ */
+#screen-intro {
+background: radial-gradient(ellipse at 40% 50%, var(–mid2) 0%, var(–dark) 70%);
+flex-direction: row;
+padding: 0;
+}
+
+.intro-left {
+flex:1;
+display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+padding: 3vh 4vw;
+gap: 2vh;
+}
+
+.hearts-row {
+display:flex; gap:10px; align-items:flex-end; justify-content:center;
+}
+.h-anim { display:inline-flex; animation:hb 1.5s ease-in-out infinite; }
+.h-anim:nth-child(1){ animation-delay:0s; }
+.h-anim:nth-child(2){ animation-delay:.2s; }
+.h-anim:nth-child(3){ animation-delay:.35s; }
+.h-anim:nth-child(4){ animation-delay:.2s; }
+.h-anim:nth-child(5){ animation-delay:0s; }
+@keyframes hb { 0%,100%{transform:scale(1)} 50%{transform:scale(1.28)} }
+.h-lg { font-size:clamp(2.2rem,6vh,3.5rem); }
+.h-sm { font-size:clamp(1.4rem,3.5vh,2.2rem); }
+.h-cake{ font-size:clamp(2rem,5vh,3rem); margin:0 6px; }
+
+.title-main {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(2.2rem,7vh,4.5rem);
+font-weight:900; line-height:1.1; text-align:center;
+background:linear-gradient(135deg,var(–pink) 0%,var(–gold) 50%,var(–blue) 100%);
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+animation:shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.35)} }
+
+.subtitle {
+font-size:clamp(.75rem,2vh,1.1rem);
+color:rgba(255,255,255,.55); font-weight:700;
+letter-spacing:3px; text-transform:uppercase; text-align:center;
+}
+
+.intro-divider {
+width:1px; align-self:stretch;
+background:linear-gradient(to bottom,transparent,rgba(255,255,255,.18),transparent);
+margin:5vh 0;
+}
+
+.intro-right {
+flex:1;
+display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+padding:3vh 4vw;
+gap:2.5vh;
+}
+
+.cake-selector {
+display:flex; flex-direction:column; align-items:center;
+gap:1.6vh;
+background:rgba(255,255,255,.06);
+border:1.5px solid rgba(255,255,255,.13);
+border-radius:22px;
+padding:2.5vh 3vw;
+width:100%; max-width:400px;
+}
+.cake-selector-label {
+font-size:clamp(.7rem,1.8vh,1rem);
+color:rgba(255,255,255,.55); font-weight:700;
+letter-spacing:1.5px; text-transform:uppercase;
+}
+.cake-selector-row { display:flex; align-items:center; gap:3vw; }
+.btn-count {
+width:clamp(40px,6.5vh,54px); height:clamp(40px,6.5vh,54px); border-radius:50%;
+border:2px solid rgba(255,255,255,.25);
+background:rgba(255,255,255,.08);
+color:white; font-size:1.6rem; font-weight:700;
+cursor:pointer; display:flex; align-items:center; justify-content:center;
+transition:all .15s; user-select:none;
+}
+.btn-count:active { background:rgba(255,255,255,.22); transform:scale(.9); }
+.btn-count:disabled { opacity:.22; cursor:not-allowed; }
+.count-display {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(2.5rem,8vh,4rem); font-weight:900;
+min-width:60px; text-align:center;
+background:linear-gradient(135deg,var(–pink),var(–blue));
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.cake-presets { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.preset-btn {
+padding:5px 14px; border-radius:20px;
+border:1.5px solid rgba(255,255,255,.18);
+background:rgba(255,255,255,.05);
+color:rgba(255,255,255,.6);
+font-family:‘Quicksand’,sans-serif; font-size:.82rem; font-weight:700;
+cursor:pointer; transition:all .15s;
+}
+.preset-btn.active,.preset-btn:active {
+background:rgba(255,215,0,.15); border-color:var(–gold); color:var(–gold);
+}
+
+.btn-start {
+background:linear-gradient(135deg,var(–pink-deep),var(–blue-deep));
+border:none; border-radius:50px;
+padding:clamp(14px,2.5vh,22px) clamp(36px,5vw,64px);
+font-family:‘Quicksand’,sans-serif;
+font-size:clamp(1rem,2.8vh,1.5rem); font-weight:700;
+color:white; cursor:pointer; letter-spacing:1px;
+animation:pulseBtn 2s ease-in-out infinite; transition:transform .2s;
+}
+@keyframes pulseBtn {
+0%,100%{ box-shadow:0 0 35px rgba(244,143,177,.4),0 0 70px rgba(79,195,247,.2); }
+50%    { box-shadow:0 0 55px rgba(244,143,177,.7),0 0 110px rgba(79,195,247,.4); }
+}
+.btn-start:active { transform:scale(.96); }
+
+/* ══ SCREEN 2 — GAME ══ */
+#screen-game {
+background: radial-gradient(ellipse at 50% 50%, var(–mid2) 0%, var(–dark) 75%);
+flex-direction:row; align-items:stretch;
+padding:0; gap:0; overflow:hidden;
+}
+
+.side-panel {
+width:clamp(130px,20vw,220px);
+display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+padding:2vh 1.5vw; gap:1.5vh; flex-shrink:0;
+transition:box-shadow .4s;
+}
+.side-panel.pink-panel {
+background:linear-gradient(180deg,rgba(244,143,177,.13) 0%,rgba(194,24,91,.06) 100%);
+border-right:1px solid rgba(244,143,177,.22);
+}
+.side-panel.blue-panel {
+background:linear-gradient(180deg,rgba(79,195,247,.13) 0%,rgba(2,136,209,.06) 100%);
+border-left:1px solid rgba(79,195,247,.22);
+}
+.side-panel.pink-panel.leading { box-shadow:inset 0 0 60px rgba(244,143,177,.12); }
+.side-panel.blue-panel.leading  { box-shadow:inset 0 0 60px rgba(79,195,247,.12); }
+
+.panel-icon { font-size:clamp(2rem,5.5vh,3.8rem); }
+.panel-label {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(.9rem,2.5vh,1.5rem); font-weight:700;
+}
+.pink-panel .panel-label { color:var(–pink); }
+.blue-panel  .panel-label { color:var(–blue); }
+
+.panel-score {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(4rem,15vh,10rem); font-weight:900; line-height:1;
+transition:transform .35s, filter .35s;
+}
+.pink-panel .panel-score { color:var(–pink); }
+.blue-panel  .panel-score { color:var(–blue); }
+.side-panel.leading .panel-score {
+transform:scale(1.1);
+filter:drop-shadow(0 0 18px currentColor);
+}
+
+.panel-bar-wrap {
+width:75%; height:6px; border-radius:10px;
+background:rgba(255,255,255,.1); overflow:hidden;
+}
+.pink-panel .panel-bar-fill { height:100%; border-radius:10px; background:var(–pink); transition:width .5s; }
+.blue-panel  .panel-bar-fill { height:100%; border-radius:10px; background:var(–blue); transition:width .5s; }
+
+.center-panel {
+flex:1; display:flex; flex-direction:column;
+align-items:center; justify-content:flex-start;
+padding:1.2vh 1.5vw; gap:.8vh;
+overflow:hidden; min-width:0;
+}
+
+.game-top {
+width:100%; display:flex; justify-content:space-between; align-items:center;
+}
+.game-title {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(.85rem,2.5vh,1.4rem); font-weight:700;
+background:linear-gradient(90deg,var(–pink),var(–gold),var(–blue));
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.person-badge {
+font-size:clamp(.7rem,2vh,1rem); font-weight:700;
+color:rgba(255,255,255,.55);
+background:rgba(255,255,255,.08);
+padding:5px 14px; border-radius:20px;
+}
+
+.progress-wrap {
+width:100%; height:6px; border-radius:10px;
+background:rgba(255,255,255,.08); overflow:hidden;
+}
+.progress-fill {
+height:100%; border-radius:10px;
+background:linear-gradient(90deg,var(–pink),var(–blue));
+transition:width .5s ease; width:0%;
+}
+
+.cake-grid {
+width:100%; flex:1;
+display:grid;
+gap:clamp(4px,1vmin,9px);
+align-content:center;
+}
+.cake-slot {
+aspect-ratio:1;
+border-radius:clamp(8px,1.5vmin,14px);
+border:2px dashed rgba(255,255,255,.13);
+background:rgba(255,255,255,.04);
+display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+position:relative; overflow:hidden; transition:all .3s;
+}
+.cake-slot.filled-pink {
+background:linear-gradient(135deg,rgba(244,143,177,.42),rgba(194,24,91,.28));
+border:2px solid var(–pink);
+animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+.cake-slot.filled-blue {
+background:linear-gradient(135deg,rgba(79,195,247,.42),rgba(2,136,209,.28));
+border:2px solid var(–blue);
+animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+0%{transform:scale(0) rotate(-10deg);opacity:0}
+70%{transform:scale(1.15) rotate(3deg)}
+100%{transform:scale(1) rotate(0deg);opacity:1}
+}
+.cake-slot.current-slot {
+border:2.5px solid var(–gold);
+background:rgba(255,215,0,.07);
+animation:curPulse 1s ease-in-out infinite;
+}
+@keyframes curPulse {
+0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}
+50%{box-shadow:0 0 0 6px rgba(255,215,0,0)}
+}
+.slot-emoji { font-size:clamp(.8rem,2.8vmin,1.8rem); }
+.slot-num {
+font-size:clamp(.38rem,1.1vmin,.62rem); font-weight:700;
+color:rgba(255,255,255,.38); position:absolute; bottom:2px;
+}
+
+.game-bottom { width:100%; display:flex; flex-direction:column; gap:.6vh; }
+
+.current-person-txt {
+text-align:center;
+font-size:clamp(.65rem,1.8vh,.95rem); color:rgba(255,255,255,.42); font-weight:600;
+}
+.current-person-txt span { color:var(–gold); font-weight:700; }
+
+.bite-row { display:flex; gap:10px; width:100%; }
+.btn-bite {
+flex:1; border:none; border-radius:16px;
+padding:clamp(10px,2vh,18px) 16px;
+font-family:‘Quicksand’,sans-serif;
+font-size:clamp(.85rem,2.5vh,1.3rem); font-weight:700;
+color:white; cursor:pointer;
+display:flex; align-items:center; justify-content:center; gap:8px;
+transition:transform .15s; position:relative; overflow:hidden;
+}
+.btn-bite::before {
+content:’’; position:absolute; inset:0;
+background:rgba(255,255,255,.15); opacity:0; transition:opacity .2s;
+}
+.btn-bite:active::before { opacity:1; }
+.btn-bite:active { transform:scale(.96); }
+.btn-bite:disabled { opacity:.3; cursor:not-allowed; transform:none !important; }
+.btn-pink { background:linear-gradient(135deg,#E91E8C,#C2185B); box-shadow:0 4px 24px rgba(233,30,140,.4); }
+.btn-blue  { background:linear-gradient(135deg,#29B6F6,#0277BD); box-shadow:0 4px 24px rgba(41,182,246,.4); }
+
+.btn-undo {
+background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.18);
+border-radius:14px; padding:10px 16px;
+color:rgba(255,255,255,.55); font-size:1.2rem;
+cursor:pointer; transition:all .2s; flex-shrink:0;
+}
+.btn-undo:active { background:rgba(255,255,255,.2); transform:scale(.95); }
+.btn-undo:disabled { opacity:.2; cursor:not-allowed; }
+
+.mini-timeline {
+width:100%; display:flex; gap:4px;
+overflow-x:auto; scrollbar-width:none; padding-bottom:2px;
+}
+.mini-timeline::-webkit-scrollbar { display:none; }
+.mini-dot { min-width:12px; height:12px; border-radius:50%; flex-shrink:0; transition:all .4s; }
+.mini-dot.empty   { background:rgba(255,255,255,.1); }
+.mini-dot.pink    { background:var(–pink); box-shadow:0 0 5px var(–pink-glow); }
+.mini-dot.blue    { background:var(–blue); box-shadow:0 0 5px var(–blue-glow); }
+.mini-dot.current { background:var(–gold); animation:dotP 1s ease-in-out infinite; }
+@keyframes dotP {
+0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.6)}
+50%{box-shadow:0 0 0 4px rgba(255,215,0,0)}
+}
+
+/* ══ SCREEN 3 — RESULT ══ */
+#screen-result {
+background:radial-gradient(ellipse at 50% 50%,var(–mid2) 0%,var(–dark) 70%);
+flex-direction:row; gap:0;
+}
+.result-left {
+flex:1; display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+gap:2.5vh; padding:3vh 5vw;
+border-right:1px solid rgba(255,255,255,.08);
+}
+.result-emoji-big {
+font-size:clamp(5rem,22vh,13rem);
+animation:resBounce .8s cubic-bezier(.34,1.56,.64,1);
+display:block; line-height:1;
+}
+@keyframes resBounce {
+0%{transform:scale(0) rotate(-20deg);opacity:0}
+100%{transform:scale(1) rotate(0);opacity:1}
+}
+.result-title {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(2rem,9vh,5.5rem); font-weight:900; line-height:1.1; text-align:center;
+animation:fadeUp .6s .3s both ease-out;
+}
+.result-subtitle {
+font-size:clamp(.9rem,3vh,1.6rem); color:rgba(255,255,255,.7);
+font-weight:600; text-align:center;
+animation:fadeUp .6s .5s both ease-out;
+}
+@keyframes fadeUp { 0%{transform:translateY(24px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+
+.result-right {
+flex:1; display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+gap:4vh; padding:3vh 5vw;
+}
+.result-scores { display:flex; gap:4vw; }
+.result-score-box {
+padding:2.5vh 4vw; border-radius:22px; text-align:center;
+animation:fadeUp .6s .7s both ease-out;
+}
+.result-score-box.pink { background:rgba(244,143,177,.18); border:2px solid var(–pink); }
+.result-score-box.blue { background:rgba(79,195,247,.18);  border:2px solid var(–blue); }
+.result-score-box .num {
+font-family:‘Playfair Display’,serif;
+font-size:clamp(3rem,11vh,6rem); font-weight:900;
+}
+.result-score-box.pink .num { color:var(–pink); }
+.result-score-box.blue .num { color:var(–blue); }
+.result-score-box .lbl { font-size:clamp(.8rem,2.2vh,1.2rem); opacity:.65; font-weight:600; margin-top:6px; }
+
+.btn-restart {
+background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.28);
+border-radius:50px; padding:clamp(12px,2vh,20px) clamp(32px,5vw,56px);
+color:white; font-family:‘Quicksand’,sans-serif;
+font-size:clamp(.9rem,2.5vh,1.3rem); font-weight:700;
+cursor:pointer; transition:all .2s; letter-spacing:1px;
+animation:fadeUp .6s 1s both ease-out;
+}
+.btn-restart:active { background:rgba(255,255,255,.2); transform:scale(.97); }
+
+/* FX */
+.confetti-piece {
+position:fixed; pointer-events:none; z-index:999; border-radius:2px;
+animation:confettiFall linear forwards; top:-20px;
+}
+@keyframes confettiFall {
+0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:1}
+100%{transform:translateY(110vh) rotate(720deg) translateX(var(–tx));opacity:0}
+}
+.ripple {
+position:fixed; border-radius:50%; pointer-events:none; z-index:500;
+transform:scale(0); animation:rippleOut .6s ease-out forwards;
+width:10px; height:10px; margin-left:-5px; margin-top:-5px;
+}
+@keyframes rippleOut { to{transform:scale(70);opacity:0} }
+</style>
+
+</head>
+<body>
+<div class="stars"></div>
+
+<!-- ══ SCREEN 1: INTRO ══ -->
+
+<div class="screen" id="screen-intro">
+  <div class="intro-left">
+    <div class="hearts-row">
+      <span class="h-anim h-lg" style="filter:drop-shadow(0 0 12px #F48FB1)"><svg width="1em" height="1em" viewBox="0 0 100 90"><path d="M50 85C50 85 5 55 5 28 5 14 16 4 28 4c8 0 15 4 22 12C57 8 64 4 72 4c12 0 23 10 23 24C95 55 50 85 50 85z" fill="#F48FB1"/></svg></span>
+      <span class="h-anim h-sm" style="filter:drop-shadow(0 0 7px #EC407A)"><svg width="1em" height="1em" viewBox="0 0 100 90"><path d="M50 85C50 85 5 55 5 28 5 14 16 4 28 4c8 0 15 4 22 12C57 8 64 4 72 4c12 0 23 10 23 24C95 55 50 85 50 85z" fill="#EC407A"/></svg></span>
+      <span class="h-anim h-cake">🎂</span>
+      <span class="h-anim h-sm" style="filter:drop-shadow(0 0 7px #29B6F6)"><svg width="1em" height="1em" viewBox="0 0 100 90"><path d="M50 85C50 85 5 55 5 28 5 14 16 4 28 4c8 0 15 4 22 12C57 8 64 4 72 4c12 0 23 10 23 24C95 55 50 85 50 85z" fill="#29B6F6"/></svg></span>
+      <span class="h-anim h-lg" style="filter:drop-shadow(0 0 12px #0288D1)"><svg width="1em" height="1em" viewBox="0 0 100 90"><path d="M50 85C50 85 5 55 5 28 5 14 16 4 28 4c8 0 15 4 22 12C57 8 64 4 72 4c12 0 23 10 23 24C95 55 50 85 50 85z" fill="#0288D1"/></svg></span>
+    </div>
+    <h1 class="title-main">Bebek Geliyor!</h1>
+    <p class="subtitle">Cinsiyet Partisi</p>
+  </div>
+
+  <div class="intro-divider"></div>
+
+  <div class="intro-right">
+    <div class="cake-selector">
+      <div class="cake-selector-label">🎂 Kaç kek ısırılacak?</div>
+      <div class="cake-selector-row">
+        <button class="btn-count" id="btn-minus" onclick="changeCount(-1)">−</button>
+        <div class="count-display" id="count-display">21</div>
+        <button class="btn-count" id="btn-plus" onclick="changeCount(1)">+</button>
+      </div>
+      <div class="cake-presets">
+        <button class="preset-btn" onclick="setCount(10)">10</button>
+        <button class="preset-btn" onclick="setCount(15)">15</button>
+        <button class="preset-btn" onclick="setCount(21)">21</button>
+        <button class="preset-btn" onclick="setCount(25)">25</button>
+        <button class="preset-btn" onclick="setCount(30)">30</button>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startGame()">🎉 Partiye Başla!</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: GAME ══ -->
+
+<div class="screen hidden" id="screen-game">
+  <div class="side-panel pink-panel" id="pink-panel">
+    <div class="panel-icon">🎀</div>
+    <div class="panel-label">Kız</div>
+    <div class="panel-score" id="pink-count">0</div>
+    <div class="panel-bar-wrap"><div class="panel-bar-fill" id="pink-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="center-panel">
+    <div class="game-top">
+      <span class="game-title">🎂 Cinsiyet Partisi</span>
+      <span class="person-badge" id="person-counter">1 / 21</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="cake-grid" id="cake-grid"></div>
+    <div class="game-bottom">
+      <div class="mini-timeline" id="mini-timeline"></div>
+      <div class="current-person-txt" id="current-person">Sıradaki: <span>1. kişi</span> 🎂</div>
+      <div class="bite-row">
+        <button class="btn-bite btn-pink" id="btn-pink" onclick="bite('pink',event)">🎀 Kız</button>
+        <button class="btn-bite btn-blue" id="btn-blue" onclick="bite('blue',event)">🎈 Erkek</button>
+        <button class="btn-undo" id="btn-undo" onclick="undoBite()" disabled>↩️</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panel blue-panel" id="blue-panel">
+    <div class="panel-icon">🎈</div>
+    <div class="panel-label">Erkek</div>
+    <div class="panel-score" id="blue-count">0</div>
+    <div class="panel-bar-wrap"><div class="panel-bar-fill" id="blue-bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: RESULT ══ -->
+
+<div class="screen hidden" id="screen-result">
+  <div class="result-left">
+    <span class="result-emoji-big" id="result-emoji">🎉</span>
+    <div class="result-title" id="result-title">Tebrikler!</div>
+    <div class="result-subtitle" id="result-subtitle">Bebeğiniz...</div>
+  </div>
+  <div class="result-right">
+    <div class="result-scores">
+      <div class="result-score-box pink"><div class="num" id="res-pink">0</div><div class="lbl">🎀 Kız</div></div>
+      <div class="result-score-box blue"><div class="num" id="res-blue">0</div><div class="lbl">🎈 Erkek</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartGame()">🔄 Yeniden Oyna</button>
+  </div>
+</div>
+
+<script>
+let TOTAL=21, selectedCount=21;
+let bites=[], pinkCount=0, blueCount=0;
+
+/* Particles */
+(function(){
+  const cols=['#F48FB1','#4FC3F7','#FFD700','#CE93D8','#A5D6A7'];
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div'); p.className='particle';
+    p.style.cssText=`left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${7+Math.random()*10}s;animation-delay:${Math.random()*14}s;width:${3+Math.random()*5}px;height:${3+Math.random()*5}px`;
+    document.body.appendChild(p);
+  }
+})();
+
+/* Count selector */
+function changeCount(d){setCount(selectedCount+d);}
+function setCount(n){
+  selectedCount=Math.max(2,Math.min(30,n));
+  document.getElementById('count-display').textContent=selectedCount;
+  document.getElementById('btn-minus').disabled=selectedCount<=2;
+  document.getElementById('btn-plus').disabled=selectedCount>=30;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===selectedCount));
+}
+document.addEventListener('DOMContentLoaded',()=>setCount(21));
+
+/* Screens */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+/* Game */
+function startGame(){
+  TOTAL=selectedCount; bites=[]; pinkCount=0; blueCount=0;
+  buildGrid(); buildTimeline(); updateUI(); showScreen('screen-game');
+}
+function restartGame(){
+  document.querySelectorAll('.confetti-piece').forEach(e=>e.remove());
+  showScreen('screen-intro');
+}
+
+function buildGrid(){
+  const grid=document.getElementById('cake-grid'); grid.innerHTML='';
+  const cols=TOTAL<=8?4:TOTAL<=15?5:TOTAL<=24?6:7;
+  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  for(let i=0;i<TOTAL;i++){
+    const s=document.createElement('div');
+    s.className='cake-slot'+(i===0?' current-slot':'');
+    s.id='slot-'+i;
+    s.innerHTML=`<span class="slot-emoji">${i===0?'🎂':'⬜'}</span><span class="slot-num">${i+1}</span>`;
+    grid.appendChild(s);
+  }
+}
+
+function buildTimeline(){
+  const tl=document.getElementById('mini-timeline'); tl.innerHTML='';
+  for(let i=0;i<TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='mini-dot'+(i===0?' current':' empty');
+    d.id='dot-'+i; tl.appendChild(d);
+  }
+}
+
+function bite(color,evt){
+  if(bites.length>=TOTAL) return;
+  const idx=bites.length;
+  createRipple(evt,color);
+  bites.push(color);
+  if(color==='pink') pinkCount++; else blueCount++;
+  const slot=document.getElementById('slot-'+idx);
+  slot.classList.remove('current-slot'); slot.classList.add('filled-'+color);
+  slot.innerHTML=`<span class="slot-emoji">${color==='pink'?'🎀':'🎈'}</span><span class="slot-num">${idx+1}</span>`;
+  document.getElementById('dot-'+idx).className='mini-dot '+color;
+  if(idx+1<TOTAL){
+    const ns=document.getElementById('slot-'+(idx+1));
+    ns.classList.add('current-slot'); ns.querySelector('.slot-emoji').textContent='🎂';
+    const nd=document.getElementById('dot-'+(idx+1));
+    nd.className='mini-dot current';
+    nd.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+  updateUI();
+  if(bites.length===TOTAL) setTimeout(showResult,900);
+}
+
+function undoBite(){
+  if(!bites.length) return;
+  const idx=bites.length-1; const color=bites.pop();
+  if(color==='pink') pinkCount--; else blueCount--;
+  const slot=document.getElementById('slot-'+idx);
+  slot.className='cake-slot current-slot';
+  slot.innerHTML=`<span class="slot-emoji">🎂</span><span class="slot-num">${idx+1}</span>`;
+  if(idx+1<TOTAL){
+    const ns=document.getElementById('slot-'+(idx+1));
+    ns.classList.remove('current-slot'); ns.querySelector('.slot-emoji').textContent='⬜';
+    document.getElementById('dot-'+(idx+1)).className='mini-dot empty';
+  }
+  document.getElementById('dot-'+idx).className='mini-dot current';
+  updateUI();
+}
+
+function updateUI(){
+  const done=bites.length;
+  document.getElementById('pink-count').textContent=pinkCount;
+  document.getElementById('blue-count').textContent=blueCount;
+  const total=pinkCount+blueCount||1;
+  document.getElementById('pink-bar').style.width=(pinkCount/total*100)+'%';
+  document.getElementById('blue-bar').style.width=(blueCount/total*100)+'%';
+  const pp=document.getElementById('pink-panel'), bp=document.getElementById('blue-panel');
+  pp.classList.toggle('leading',pinkCount>blueCount);
+  bp.classList.toggle('leading',blueCount>pinkCount);
+  document.getElementById('progress-fill').style.width=(done/TOTAL*100)+'%';
+  const cur=Math.min(done+1,TOTAL);
+  document.getElementById('person-counter').textContent=cur+' / '+TOTAL;
+  const cp=document.getElementById('current-person');
+  cp.innerHTML=done<TOTAL?`Sıradaki: <span>${cur}. kişi</span> 🎂`:`<span>Tüm kekler ısırıldı! 🎉</span>`;
+  const fin=done>=TOTAL;
+  document.getElementById('btn-pink').disabled=fin;
+  document.getElementById('btn-blue').disabled=fin;
+  document.getElementById('btn-undo').disabled=done===0;
+}
+
+function showResult(){
+  const pw=pinkCount>blueCount, tie=pinkCount===blueCount;
+  document.getElementById('res-pink').textContent=pinkCount;
+  document.getElementById('res-blue').textContent=blueCount;
+  if(tie){
+    document.getElementById('result-emoji').textContent='🤔';
+    document.getElementById('result-title').innerHTML='<span style="color:#FFD700">Beraberlik!</span>';
+    document.getElementById('result-subtitle').textContent='Ne sürpriz bir sonuç!';
+  } else if(pw){
+    document.getElementById('result-emoji').textContent='🎀';
+    document.getElementById('result-title').innerHTML='<span style="color:#F48FB1">Kız Bebek!</span>';
+    document.getElementById('result-subtitle').textContent='Tebrikler! Pembe dünya geliyor 💕';
+  } else {
+    document.getElementById('result-emoji').textContent='🎈';
+    document.getElementById('result-title').innerHTML='<span style="color:#4FC3F7">Erkek Bebek!</span>';
+    document.getElementById('result-subtitle').textContent='Tebrikler! Mavi dünya geliyor 💙';
+  }
+  showScreen('screen-result');
+  if(!tie) setTimeout(()=>launchConfetti(pw?'pink':'blue'),400);
+}
+
+function launchConfetti(color){
+  const pk=['#F48FB1','#E91E8C','#FF80AB','#FCE4EC','#FFD700','#CE93D8'];
+  const bl=['#4FC3F7','#0288D1','#80DEEA','#E3F2FD','#FFD700','#B3E5FC'];
+  const pal=color==='pink'?pk:bl;
+  for(let i=0;i<100;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div'); c.className='confetti-piece';
+      c.style.left=Math.random()*100+'vw';
+      c.style.background=pal[Math.floor(Math.random()*pal.length)];
+      c.style.width=(5+Math.random()*10)+'px'; c.style.height=(10+Math.random()*16)+'px';
+      c.style.setProperty('--tx',(Math.random()*240-120)+'px');
+      c.style.animationDuration=(2.5+Math.random()*3)+'s';
+      c.style.borderRadius=Math.random()>.5?'50%':'2px';
+      document.body.appendChild(c); setTimeout(()=>c.remove(),6000);
+    },i*35);
+  }
+}
+
+function createRipple(evt,color){
+  const r=document.createElement('div'); r.className='ripple';
+  r.style.left=(evt?evt.clientX:innerWidth/2)+'px';
+  r.style.top=(evt?evt.clientY:innerHeight/2)+'px';
+  r.style.background=color==='pink'
+    ?'radial-gradient(circle,rgba(244,143,177,.35),transparent)'
+    :'radial-gradient(circle,rgba(79,195,247,.35),transparent)';
+  document.body.appendChild(r); setTimeout(()=>r.remove(),700);
+}
+</script>
+
+</body>
+</html>
