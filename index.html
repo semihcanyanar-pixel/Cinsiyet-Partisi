@@ -3,19 +3,19 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Bebek Cinsiyeti</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:#0f0720;font-family:'Quicksand','Helvetica Neue',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+html{width:100%;height:100%;height:-webkit-fill-available;background:#0f0720}body{width:100%;height:100%;min-height:100vh;min-height:-webkit-fill-available;overflow:hidden;background:#0f0720;font-family:'Quicksand','Helvetica Neue',sans-serif;color:#fff;-webkit-font-smoothing:antialiased;-webkit-overflow-scrolling:touch}
 .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:radial-gradient(1.5px 1.5px at 8% 12%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 25% 38%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 42% 7%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 60% 22%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 82% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 14% 75%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 52% 82%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 70% 90%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 33% 93%,rgba(255,255,255,.6) 0%,transparent 100%)}
 .particle{position:fixed;pointer-events:none;z-index:1;border-radius:50%;opacity:0;-webkit-animation:floatUp linear infinite;animation:floatUp linear infinite}
 @-webkit-keyframes floatUp{0%{-webkit-transform:translateY(110vh) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.15}100%{-webkit-transform:translateY(-10vh) rotate(360deg);opacity:0}}
 @keyframes floatUp{0%{transform:translateY(110vh) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.15}100%{transform:translateY(-10vh) rotate(360deg);opacity:0}}
-.screen{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-transition:opacity .5s;transition:opacity .5s}
+.screen{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:10;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-transition:opacity .5s;transition:opacity .5s}
 .screen.hidden{opacity:0;pointer-events:none}
 
 /* INTRO */
@@ -193,6 +193,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0f0720;font-family:
 .flash-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:50;opacity:0;pointer-events:none;-webkit-transition:opacity .1s;transition:opacity .1s}
 .flash-overlay.show{opacity:1}
 .ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:500;-webkit-transform:scale(0);transform:scale(0);-webkit-animation:rippleOut .6s ease-out forwards;animation:rippleOut .6s ease-out forwards;width:10px;height:10px;margin-left:-5px;margin-top:-5px}
+/* Safe area - çentikli telefonlar için */
+#screen-intro,#screen-game,#screen-parent,#screen-result{
+padding-top:env(safe-area-inset-top);
+padding-bottom:env(safe-area-inset-bottom);
+padding-left:env(safe-area-inset-left);
+padding-right:env(safe-area-inset-right);
+}
 @-webkit-keyframes rippleOut{to{-webkit-transform:scale(70);opacity:0}}
 @keyframes rippleOut{to{transform:scale(70);opacity:0}}
 </style>
@@ -816,6 +823,11 @@ function createRipple(evt,color){
 })();
 
 document.addEventListener('DOMContentLoaded',function(){setCount(25);updateBadge();});
+// iOS scroll/bounce önleme
+document.addEventListener('touchmove', function(e){
+  if(e.target.closest('.modal-body'))return;
+  e.preventDefault();
+}, {passive:false});
 
 
 /* iOS ses için: onclick handler içinde senkron AudioContext başlatma */
