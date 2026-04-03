@@ -10,12 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksand','Helvetica Neue',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}body{height:100vh;height:100dvh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0}
+html{margin:0;padding:0;width:100%;height:100%;background:#0f0720}body{margin:0;padding:0;width:100%;height:100%;height:100svh;overflow:hidden;background:#0f0720;font-family:'Quicksand','Helvetica Neue',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 .stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:radial-gradient(1.5px 1.5px at 8% 12%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 25% 38%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 42% 7%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 60% 22%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 82% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 14% 75%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 52% 82%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 70% 90%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 33% 93%,rgba(255,255,255,.6) 0%,transparent 100%)}
 .particle{position:fixed;pointer-events:none;z-index:1;border-radius:50%;opacity:0;-webkit-animation:floatUp linear infinite;animation:floatUp linear infinite}
 @-webkit-keyframes floatUp{0%{-webkit-transform:translateY(110vh) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.15}100%{-webkit-transform:translateY(-10vh) rotate(360deg);opacity:0}}
 @keyframes floatUp{0%{transform:translateY(110vh) rotate(0);opacity:0}10%{opacity:.5}90%{opacity:.15}100%{transform:translateY(-10vh) rotate(360deg);opacity:0}}
-.screen{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;height:100dvh;z-index:10;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-transition:opacity .5s;transition:opacity .5s}
+.screen{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:10;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-transition:opacity .5s;transition:opacity .5s}
 .screen.hidden{opacity:0;pointer-events:none}
 
 /* INTRO */
@@ -73,7 +73,7 @@ html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksan
 .btn-add-p{background:linear-gradient(135deg,#C2185B,#0288D1);border:none;border-radius:12px;padding:10px 16px;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
 
 /* GAME */
-#screen-game{background:radial-gradient(ellipse at 50% 50%,#2d1860 0%,#0f0720 75%);-webkit-flex-direction:row;flex-direction:row;-webkit-align-items:stretch;align-items:stretch;padding:0;gap:0;overflow:hidden}
+#screen-game{background:radial-gradient(ellipse at 50% 50%,#2d1860 0%,#0f0720 75%);-webkit-flex-direction:row;flex-direction:row;-webkit-align-items:stretch;align-items:stretch;padding:0;gap:0;overflow:hidden;box-sizing:border-box}
 .side-panel{width:clamp(120px,18vw,210px);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:2vh 1.5vw;gap:1.2vh;-webkit-flex-shrink:0;flex-shrink:0}
 .side-panel.pink-panel{background:linear-gradient(180deg,rgba(244,143,177,.15) 0%,rgba(194,24,91,.05) 100%);border-right:1px solid rgba(244,143,177,.25)}
 .side-panel.blue-panel{background:linear-gradient(180deg,rgba(79,195,247,.15) 0%,rgba(2,136,209,.05) 100%);border-left:1px solid rgba(79,195,247,.25)}
@@ -97,7 +97,7 @@ html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksan
 .panel-bar-wrap{width:75%;height:5px;border-radius:10px;background:rgba(255,255,255,.1);overflow:hidden}
 .panel-bar-fill{height:100%;border-radius:10px;-webkit-transition:width .5s;transition:width .5s}
 .pink-panel .panel-bar-fill{background:#F48FB1}.blue-panel .panel-bar-fill{background:#4FC3F7}
-.center-panel{-webkit-flex:1;flex:1;min-width:0;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-justify-content:flex-start;justify-content:flex-start;padding:1.2vh 1.2vw;gap:.7vh;overflow:hidden}
+.center-panel{-webkit-flex:1;flex:1;min-width:0;min-height:0;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-justify-content:flex-start;justify-content:flex-start;padding:1vh 1vw;gap:.5vh;overflow:hidden}
 .game-top{width:100%;display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center}
 .game-title{font-family:‘Playfair Display’,Georgia,serif;font-size:clamp(.8rem,2.2vh,1.3rem);font-weight:700;color:#F4A4C0}
 .person-badge{font-size:clamp(.65rem,1.8vh,.95rem);font-weight:700;color:rgba(255,255,255,.55);background:rgba(255,255,255,.09);padding:4px 13px;border-radius:18px}
@@ -115,7 +115,7 @@ html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksan
 .timer-circle-fg{fill:none;stroke:#FFD700;stroke-linecap:round;-webkit-transition:stroke-dashoffset .9s linear;transition:stroke-dashoffset .9s linear;-webkit-transform:rotate(-90deg);transform:rotate(-90deg);-webkit-transform-origin:50% 50%;transform-origin:50% 50%}
 .timer-circle-fg.urgent{stroke:#FF5252}
 .timer-done-label{font-size:clamp(.55rem,1.5vh,.8rem);color:rgba(255,255,255,.5);font-weight:700;text-align:center;letter-spacing:1px}
-.cake-grid{width:100%;-webkit-flex:1;flex:1;display:grid;gap:clamp(4px,1vmin,8px);-webkit-align-content:center;align-content:center}
+.cake-grid{width:100%;-webkit-flex:1;flex:1;min-height:0;display:grid;gap:clamp(3px,.8vmin,7px);-webkit-align-content:center;align-content:center}
 .cake-slot{aspect-ratio:1/1;border-radius:clamp(7px,1.5vmin,13px);border:2px dashed rgba(255,255,255,.14);background:rgba(255,255,255,.04);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;position:relative;overflow:hidden;-webkit-transition:all .3s;transition:all .3s}
 .cake-slot.filled-pink{background:linear-gradient(135deg,rgba(244,143,177,.42),rgba(194,24,91,.28));border:2px solid #F48FB1;-webkit-animation:popIn .45s ease;animation:popIn .45s ease}
 .cake-slot.filled-blue{background:linear-gradient(135deg,rgba(79,195,247,.42),rgba(2,136,209,.28));border:2px solid #4FC3F7;-webkit-animation:popIn .45s ease;animation:popIn .45s ease}
@@ -127,9 +127,9 @@ html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksan
 .slot-emoji{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;width:100%;-webkit-flex:0 0 65%;flex:0 0 65%;min-height:0;font-size:clamp(.75rem,2.5vmin,1.6rem)}
 .slot-emoji img{width:88%;height:88%;object-fit:contain;display:block}
 .slot-name{font-size:clamp(.38rem,1.15vmin,.66rem);font-weight:700;color:#ffffff;white-space:nowrap;overflow:hidden;max-width:96%;text-overflow:ellipsis;text-align:center;padding:0 2px 3px;-webkit-flex-shrink:0;flex-shrink:0;line-height:1.3;display:block;min-height:0}
-.game-bottom{width:100%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:.5vh}
+.game-bottom{width:100%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:.4vh;-webkit-flex-shrink:0;flex-shrink:0}
 .bite-row{display:-webkit-flex;display:flex;gap:10px;width:100%}
-.btn-bite{-webkit-flex:1;flex:1;border:none;border-radius:14px;padding:clamp(10px,2vh,16px) 12px;font-family:‘Quicksand’,sans-serif;font-size:clamp(.8rem,2.3vh,1.2rem);font-weight:700;color:#fff;cursor:pointer;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;gap:7px;-webkit-transition:-webkit-transform .15s;transition:transform .15s}
+.btn-bite{-webkit-flex:1;flex:1;border:none;border-radius:14px;padding:clamp(8px,1.6vh,14px) 12px;font-family:‘Quicksand’,sans-serif;font-size:clamp(.8rem,2.3vh,1.2rem);font-weight:700;color:#fff;cursor:pointer;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;gap:7px;-webkit-transition:-webkit-transform .15s;transition:transform .15s}
 .btn-bite:active{-webkit-transform:scale(.96);transform:scale(.96)}.btn-bite:disabled{opacity:.3}
 .btn-pink{background:linear-gradient(135deg,#E91E8C,#C2185B);box-shadow:0 4px 20px rgba(233,30,140,.4)}
 .btn-blue{background:linear-gradient(135deg,#29B6F6,#0277BD);box-shadow:0 4px 20px rgba(41,182,246,.4)}
@@ -194,11 +194,12 @@ html,body{margin:0;padding:0;width:100%;background:#0f0720;font-family:'Quicksan
 .flash-overlay.show{opacity:1}
 .ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:500;-webkit-transform:scale(0);transform:scale(0);-webkit-animation:rippleOut .6s ease-out forwards;animation:rippleOut .6s ease-out forwards;width:10px;height:10px;margin-left:-5px;margin-top:-5px}
 /* Safe area - çentikli telefonlar için */
-#screen-intro,#screen-game,#screen-parent,#screen-result{
+#screen-intro,#screen-parent,#screen-result{
 padding-top:env(safe-area-inset-top);
 padding-bottom:env(safe-area-inset-bottom);
-padding-left:env(safe-area-inset-left);
-padding-right:env(safe-area-inset-right);
+}
+#screen-game{
+padding-top:env(safe-area-inset-top);
 }
 @-webkit-keyframes rippleOut{to{-webkit-transform:scale(70);opacity:0}}
 @keyframes rippleOut{to{transform:scale(70);opacity:0}}
