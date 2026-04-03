@@ -575,7 +575,15 @@ function bite(color,evt){
     var nd=document.getElementById('dot-'+next);nd.className='mini-dot current';
     nd.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
-  updateUI();showCurrentPerson(next);startTimer();
+  updateUI();
+  // Erken bitiş: herhangi bir taraf çoğunluğa ulaştıysa
+  var threshold=Math.ceil(TOTAL/2);
+  if(pinkCount>=threshold||blueCount>=threshold){
+    stopTimer();
+    setTimeout(showResult,800);
+    return;
+  }
+  showCurrentPerson(next);startTimer();
 }
 
 function undoBite(){
@@ -640,7 +648,9 @@ function updateUI(){
   var cur=Math.min(done+1,TOTAL);
   document.getElementById('person-counter').textContent=cur+' / '+TOTAL;
   showCurrentPerson(done);
-  var fin=(done>=TOTAL-2);
+  var threshold=Math.ceil(TOTAL/2);
+  var earlyWin=(pinkCount>=threshold||blueCount>=threshold);
+  var fin=(done>=TOTAL-2)||earlyWin;
   document.getElementById('btn-pink').disabled=fin;
   document.getElementById('btn-blue').disabled=fin;
   document.getElementById('btn-undo').disabled=(done===0);
