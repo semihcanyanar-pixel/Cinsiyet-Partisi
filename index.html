@@ -124,9 +124,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0f0720;font-family:
 .cake-slot.current-slot{border:2.5px solid #FFD700;background:rgba(255,215,0,.07);-webkit-animation:curPulse 1s ease-in-out infinite;animation:curPulse 1s ease-in-out infinite}
 @-webkit-keyframes curPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,215,0,0)}}
 @keyframes curPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,215,0,0)}}
-.slot-emoji{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;width:100%;-webkit-flex:1;flex:1;font-size:clamp(.75rem,2.5vmin,1.6rem)}
+.slot-emoji{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;width:100%;-webkit-flex:0 0 65%;flex:0 0 65%;min-height:0;font-size:clamp(.75rem,2.5vmin,1.6rem)}
 .slot-emoji img{width:88%;height:88%;object-fit:contain;display:block}
-.slot-name{font-size:clamp(.4rem,1.1vmin,.68rem);font-weight:700;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;max-width:95%;text-overflow:ellipsis;text-align:center;padding-bottom:2px;-webkit-flex-shrink:0;flex-shrink:0}
+.slot-name{font-size:clamp(.38rem,1.15vmin,.66rem);font-weight:700;color:#ffffff;white-space:nowrap;overflow:hidden;max-width:96%;text-overflow:ellipsis;text-align:center;padding:0 2px 3px;-webkit-flex-shrink:0;flex-shrink:0;line-height:1.3;display:block;min-height:0}
 .game-bottom{width:100%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:.5vh}
 .bite-row{display:-webkit-flex;display:flex;gap:10px;width:100%}
 .btn-bite{-webkit-flex:1;flex:1;border:none;border-radius:14px;padding:clamp(10px,2vh,16px) 12px;font-family:‘Quicksand’,sans-serif;font-size:clamp(.8rem,2.3vh,1.2rem);font-weight:700;color:#fff;cursor:pointer;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;gap:7px;-webkit-transition:-webkit-transform .15s;transition:transform .15s}
@@ -484,9 +484,9 @@ function buildGrid(){
     var isP=(i>=TOTAL-2);
     s.className='cake-slot'+(i===0?' current-slot':'');
     s.id='slot-'+i;
-    var nm=assignedNames[i]?'<span class="slot-name">'+assignedNames[i]+'</span>':'';
+    var gName=assignedNames[i]||'';
     var icon=isP?'⭐':'🎂';
-    s.innerHTML='<span class="slot-emoji">'+icon+'</span>'+nm;
+    s.innerHTML='<span class="slot-emoji">'+icon+'</span><span class="slot-name">'+gName+'</span>';
     g.appendChild(s);
   }
 }
@@ -541,9 +541,9 @@ function bite(color,evt){
   scoreBump(color);
   var slot=document.getElementById('slot-'+idx);
   slot.className='cake-slot filled-'+color;
-  var cakeImg=color==='pink'?'<img src="'+PINK_CAKE+'" style="width:88%;height:88%;object-fit:contain">':'<img src="'+BLUE_CAKE+'" style="width:88%;height:88%;object-fit:contain">';
-  var nm=assignedNames[idx]?'<span class="slot-name">'+assignedNames[idx]+'</span>':'';
-  slot.innerHTML='<span class="slot-emoji">'+cakeImg+'</span>'+nm;
+  var cakeImg=color==='pink'?'<img src="'+PINK_CAKE+'" style="width:85%;height:85%;object-fit:contain;display:block;">':'<img src="'+BLUE_CAKE+'" style="width:85%;height:85%;object-fit:contain;display:block;">';
+  var slotName=assignedNames[idx]||'';
+  slot.innerHTML='<span class="slot-emoji">'+cakeImg+'</span><span class="slot-name">'+slotName+'</span>';
   document.getElementById('dot-'+idx).className='mini-dot '+color;
   var next=idx+1;
   if(next===TOTAL-2){updateUI();setTimeout(goToParentScreen,600);return;}
@@ -551,8 +551,8 @@ function bite(color,evt){
     var ns=document.getElementById('slot-'+next);
     ns.className='cake-slot current-slot';
     var nIcon=(next>=TOTAL-2)?'⭐':'🎂';
-    var nNm=assignedNames[next]?'<span class="slot-name">'+assignedNames[next]+'</span>':'';
-    ns.innerHTML='<span class="slot-emoji">'+nIcon+'</span>'+nNm;
+    var nName=assignedNames[next]||'';
+    ns.innerHTML='<span class="slot-emoji">'+nIcon+'</span><span class="slot-name">'+nName+'</span>';
     var nd=document.getElementById('dot-'+next);nd.className='mini-dot current';
     nd.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
@@ -567,13 +567,13 @@ function undoBite(){
   if(color==='pink')pinkCount--;else blueCount--;
   var slot=document.getElementById('slot-'+idx);
   slot.className='cake-slot current-slot';
-  var nm=assignedNames[idx]?'<span class="slot-name">'+assignedNames[idx]+'</span>':'';
-  slot.innerHTML='<span class="slot-emoji">🎂</span>'+nm;
+  var undoName=assignedNames[idx]||'';
+  slot.innerHTML='<span class="slot-emoji">🎂</span><span class="slot-name">'+undoName+'</span>';
   if(idx+1<TOTAL){
     var ns=document.getElementById('slot-'+(idx+1));
     ns.className='cake-slot';
-    var pNm=assignedNames[idx+1]?'<span class="slot-name">'+assignedNames[idx+1]+'</span>':'';
-    ns.innerHTML='<span class="slot-emoji">🎂</span>'+pNm;
+    var pName=assignedNames[idx+1]||'';
+    ns.innerHTML='<span class="slot-emoji">🎂</span><span class="slot-name">'+pName+'</span>';
     document.getElementById('dot-'+(idx+1)).className='mini-dot empty';
   }
   document.getElementById('dot-'+idx).className='mini-dot current';
@@ -666,8 +666,8 @@ function parentBite(color,evt){
   if(slot){
     slot.className='cake-slot filled-'+color;
     var ci=color==='pink'?'<img src="'+PINK_CAKE+'" style="width:88%;height:88%;object-fit:contain">':'<img src="'+BLUE_CAKE+'" style="width:88%;height:88%;object-fit:contain">';
-    var nm=assignedNames[si]?'<span class="slot-name">'+assignedNames[si]+'</span>':'';
-    slot.innerHTML='<span class="slot-emoji">'+ci+'</span>'+nm;
+    var pSlotName=assignedNames[si]||'';
+    slot.innerHTML='<span class="slot-emoji">'+ci+'</span><span class="slot-name">'+pSlotName+'</span>';
   }
   var dot=document.getElementById('dot-'+si);if(dot)dot.className='mini-dot '+color;
   if(parentStep===0){parentStep=1;setTimeout(startParentTurn,1200);}
@@ -727,18 +727,37 @@ function launchConfetti(color){
   var pk=['#F48FB1','#E91E8C','#FF80AB','#FCE4EC','#FFD700','#CE93D8'];
   var bl=['#4FC3F7','#0288D1','#80DEEA','#E3F2FD','#FFD700','#B3E5FC'];
   var pal=color==='pink'?pk:bl;
-  for(var i=0;i<120;i++){
+  for(var i=0;i<100;i++){
     (function(idx){
       setTimeout(function(){
-        var c=document.createElement('div');c.className='confetti-piece';
-        c.style.left=(Math.random()*42)+'vw';
-        c.style.background=pal[Math.floor(Math.random()*pal.length)];
-        c.style.width=(5+Math.random()*10)+'px';c.style.height=(10+Math.random()*16)+'px';
-        c.style.setProperty('--tx',(Math.random()*160-40)+'px');
-        c.style.animationDuration=(2+Math.random()*2.5)+'s';
-        c.style.borderRadius=Math.random()>.5?'50%':'2px';
+        var tx=(Math.random()*200-60);
+        var startX=Math.random()*42;
+        var dur=(2000+Math.random()*2500);
+        var w=(5+Math.random()*10);
+        var h=(10+Math.random()*16);
+        var br=Math.random()>.5?'50%':'2px';
+        var bg=pal[Math.floor(Math.random()*pal.length)];
+        var c=document.createElement('div');
+        c.style.position='fixed';
+        c.style.top='-20px';
+        c.style.left=startX+'vw';
+        c.style.width=w+'px';
+        c.style.height=h+'px';
+        c.style.background=bg;
+        c.style.borderRadius=br;
+        c.style.pointerEvents='none';
+        c.style.zIndex='999';
+        c.style.opacity='1';
+        c.style.webkitTransition='transform '+dur+'ms linear, opacity '+dur+'ms linear';
+        c.style.transition='transform '+dur+'ms linear, opacity '+dur+'ms linear';
         document.body.appendChild(c);
-        setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c);},5000);
+        setTimeout(function(){
+          var rot=Math.floor(Math.random()*720);
+          c.style.webkitTransform='translateY(110vh) translateX('+tx+'px) rotate('+rot+'deg)';
+          c.style.transform='translateY(110vh) translateX('+tx+'px) rotate('+rot+'deg)';
+          c.style.opacity='0';
+        },20);
+        setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c);},dur+100);
       },idx*25);
     })(i);
   }
