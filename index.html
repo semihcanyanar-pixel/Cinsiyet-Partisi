@@ -373,29 +373,48 @@ var parentStep=0,parentTimerInterval=null;
 var audioCtx=null;
 var CIRCUMFERENCE=213.6;
 
-/* AUDIO */
-function getAudioCtx(){
-  if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
-  if(audioCtx.state==='suspended'){try{audioCtx.resume();}catch(e){}}
+/* AUDIO - iOS Safari uyumlu */
+function initAudio(){
+  if(audioCtx)return audioCtx;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return null;
+    audioCtx=new AC();
+  }catch(e){return null;}
   return audioCtx;
 }
-function playNote(freq,type,start,dur,vol){
-  var ctx=getAudioCtx();if(!ctx)return;
-  var osc=ctx.createOscillator();
-  var gain=ctx.createGain();
-  osc.connect(gain);gain.connect(ctx.destination);
-  osc.type=type||'sine';osc.frequency.value=freq;
-  gain.gain.setValueAtTime(0.001,start);
-  gain.gain.linearRampToValueAtTime(vol||0.2,start+0.03);
-  gain.gain.exponentialRampToValueAtTime(0.001,start+dur);
-  osc.start(start);osc.stop(start+dur+0.05);
+function resumeAudio(){
+  if(!audioCtx)return;
+  if(audioCtx.state==='suspended'||audioCtx.state==='interrupted'){
+    audioCtx.resume();
+  }
 }
-function soundPink(){var ctx=getAudioCtx();if(!ctx)return;var t=ctx.currentTime;var n=[523,659,784,1047];for(var i=0;i<n.length;i++){playNote(n[i],'sine',t+i*0.12,0.25,0.18);}}
-function soundBlue(){var ctx=getAudioCtx();if(!ctx)return;var t=ctx.currentTime;var n=[196,247,294,392];for(var i=0;i<n.length;i++){playNote(n[i],'triangle',t+i*0.12,0.28,0.2);}}
-function soundTick(){var ctx=getAudioCtx();if(!ctx)return;playNote(880,'square',ctx.currentTime,0.07,0.05);}
-function soundUrgent(){var ctx=getAudioCtx();if(!ctx)return;playNote(440,'sawtooth',ctx.currentTime,0.09,0.07);}
-function soundParent(){var ctx=getAudioCtx();if(!ctx)return;var t=ctx.currentTime;var n=[523,659,784,1047,1319];for(var i=0;i<n.length;i++){playNote(n[i],'sine',t+i*0.1,0.3,0.18);}}
-function soundResult(){var ctx=getAudioCtx();if(!ctx)return;var t=ctx.currentTime;var n=[523,659,784,880,1047,1319];for(var i=0;i<n.length;i++){playNote(n[i],'sine',t+i*0.1,0.35,0.2);}}
+function beep(freqs,dur,vol){
+  resumeAudio();
+  if(!audioCtx)return;
+  var t=audioCtx.currentTime;
+  for(var i=0;i<freqs.length;i++){
+    (function(f,delay){
+      try{
+        var o=audioCtx.createOscillator();
+        var g=audioCtx.createGain();
+        o.connect(g);g.connect(audioCtx.destination);
+        o.type='sine';o.frequency.value=f;
+        var s=t+delay;
+        g.gain.setValueAtTime(0.001,s);
+        g.gain.linearRampToValueAtTime(vol,s+0.02);
+        g.gain.exponentialRampToValueAtTime(0.001,s+dur);
+        o.start(s);o.stop(s+dur+0.05);
+      }catch(e){}
+    })(freqs[i], i*0.11);
+  }
+}
+function soundPink(){beep([523,659,784,1047],0.22,0.25);}
+function soundBlue(){beep([220,277,330,440],0.22,0.28);}
+function soundTick(){beep([880],0.06,0.08);}
+function soundUrgent(){beep([440,440],0.08,0.1);}
+function soundParent(){beep([523,659,784,1047,1319],0.28,0.22);}
+function soundResult(){beep([523,659,784,880,1047,1319],0.32,0.22);}
 
 /* MODAL */
 function openModal(){renderModal();document.getElementById('modal-overlay').classList.add('open');}
@@ -447,7 +466,7 @@ function showScreen(id){
 
 /* GAME */
 function startGame(){
-  getAudioCtx();
+  initAudio();
   TOTAL=selectedCount;bites=[];pinkCount=0;blueCount=0;
   assignNames();buildGrid();buildTimeline();updateUI();
   showScreen('screen-game');
@@ -787,6 +806,33 @@ function createRipple(evt,color){
 })();
 
 document.addEventListener('DOMContentLoaded',function(){setCount(25);updateBadge();});
+
+/* iOS Audio Unlock - ilk dokunuşta ses açılır */
+(function(){
+  var unlocked=false;
+  function unlock(){
+    if(unlocked)return;
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    var ctx=new AC();
+    var buf=ctx.createBuffer(1,1,22050);
+    var src=ctx.createBufferSource();
+    src.buffer=buf;src.connect(ctx.destination);
+    src.start(0);
+    setTimeout(function(){ctx.close();},100);
+    if(!audioCtx){
+      try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    }
+    if(audioCtx&&audioCtx.state==='suspended'){audioCtx.resume();}
+    unlocked=true;
+    document.removeEventListener('touchstart',unlock,true);
+    document.removeEventListener('touchend',unlock,true);
+    document.removeEventListener('click',unlock,true);
+  }
+  document.addEventListener('touchstart',unlock,true);
+  document.addEventListener('touchend',unlock,true);
+  document.addEventListener('click',unlock,true);
+})();
 </script>
 
 </body>
