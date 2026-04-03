@@ -294,8 +294,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0f0720;font-family:
     <div class="game-bottom">
       <div class="mini-timeline" id="mini-timeline"></div>
       <div class="bite-row">
-        <button class="btn-bite btn-pink" id="btn-pink" onclick="bite('pink',event)">🎀 Kız</button>
-        <button class="btn-bite btn-blue" id="btn-blue" onclick="bite('blue',event)">🎈 Erkek</button>
+        <button class="btn-bite btn-pink" id="btn-pink" onclick="playAndBite('pink',event)">🎀 Kız</button>
+        <button class="btn-bite btn-blue" id="btn-blue" onclick="playAndBite('blue',event)">🎈 Erkek</button>
         <button class="btn-undo" id="btn-undo" onclick="undoBite()" disabled>↩️</button>
       </div>
     </div>
@@ -323,8 +323,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0f0720;font-family:
     <div class="parent-countdown" id="parent-countdown">10</div>
   </div>
   <div class="parent-bite-row">
-    <button class="btn-parent-bite btn-parent-pink" id="btn-parent-pink" onclick="parentBite('pink',event)">🎀 Kız</button>
-    <button class="btn-parent-bite btn-parent-blue" id="btn-parent-blue" onclick="parentBite('blue',event)">🎈 Erkek</button>
+    <button class="btn-parent-bite btn-parent-pink" id="btn-parent-pink" onclick="playAndParentBite('pink',event)">🎀 Kız</button>
+    <button class="btn-parent-bite btn-parent-blue" id="btn-parent-blue" onclick="playAndParentBite('blue',event)">🎈 Erkek</button>
   </div>
 </div>
 
@@ -552,7 +552,7 @@ function bite(color,evt){
   stopTimer();
   var idx=bites.length;
   if(idx>=TOTAL-2)return;
-  if(color==='pink'){soundPink();pinkCount++;}else{soundBlue();blueCount++;}
+  if(color==='pink'){pinkCount++;}else{blueCount++;}
   bites.push(color);
   createRipple(evt,color);
   flashScreen(color);
@@ -677,7 +677,7 @@ function parentBite(color,evt){
   if(parentTimerInterval){clearInterval(parentTimerInterval);parentTimerInterval=null;}
   document.getElementById('btn-parent-pink').disabled=true;
   document.getElementById('btn-parent-blue').disabled=true;
-  if(color==='pink'){soundPink();pinkCount++;}else{soundBlue();blueCount++;}
+  if(color==='pink'){pinkCount++;}else{blueCount++;}
   bites.push(color);
   createRipple(evt,color);flashScreen(color);miniConfetti(color,evt);scoreBump(color);
   var si=TOTAL-2+parentStep;
@@ -806,6 +806,41 @@ function createRipple(evt,color){
 })();
 
 document.addEventListener('DOMContentLoaded',function(){setCount(25);updateBadge();});
+
+
+/* iOS ses için: onclick handler içinde senkron AudioContext başlatma */
+function iosPlayTone(freqs, vol) {
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!audioCtx) audioCtx = new AC();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    var t = audioCtx.currentTime;
+    for (var i = 0; i < freqs.length; i++) {
+      (function(f, i2) {
+        var o = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = 'sine'; o.frequency.value = f;
+        var s = t + i2 * 0.11;
+        g.gain.setValueAtTime(0.001, s);
+        g.gain.linearRampToValueAtTime(vol, s + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, s + 0.25);
+        o.start(s); o.stop(s + 0.3);
+      })(freqs[i], i);
+    }
+  } catch(e) {}
+}
+function playAndBite(color, evt) {
+  if (color === 'pink') iosPlayTone([523, 659, 784, 1047], 0.25);
+  else iosPlayTone([220, 277, 330, 440], 0.28);
+  bite(color, evt);
+}
+function playAndParentBite(color, evt) {
+  if (color === 'pink') iosPlayTone([523, 659, 784, 1047], 0.25);
+  else iosPlayTone([220, 277, 330, 440], 0.28);
+  parentBite(color, evt);
+}
 
 /* iOS Audio Unlock - ilk dokunuşta ses açılır */
 (function(){
