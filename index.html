@@ -108,7 +108,7 @@ html{margin:0;padding:0;width:100%;height:100%;background:#0f0720}body{margin:0;
 @-webkit-keyframes nameIn{0%{-webkit-transform:translateY(12px);opacity:0}100%{-webkit-transform:translateY(0);opacity:1}}
 @keyframes nameIn{0%{transform:translateY(12px);opacity:0}100%{transform:translateY(0);opacity:1}}
 .cp-sub{font-size:clamp(.55rem,1.3vh,.75rem);color:rgba(255,255,255,.4);font-weight:600}
-.timer-ring-wrap{position:relative;display:inline-block}
+.timer-ring-wrap{position:relative;display:inline-block;display:none}
 .timer-ring-wrap svg{display:block}
 .timer-text{position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);font-family:‘Playfair Display’,Georgia,serif;font-size:clamp(1rem,3vh,1.8rem);font-weight:900;color:#FFD700}
 .timer-circle-bg{fill:none;stroke:rgba(255,255,255,.1)}
@@ -122,6 +122,8 @@ html{margin:0;padding:0;width:100%;height:100%;background:#0f0720}body{margin:0;
 @-webkit-keyframes popIn{0%{-webkit-transform:scale(0);opacity:0}70%{-webkit-transform:scale(1.12)}100%{-webkit-transform:scale(1);opacity:1}}
 @keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
 .cake-slot.current-slot{border:2.5px solid #FFD700;background:rgba(255,215,0,.07);-webkit-animation:curPulse 1s ease-in-out infinite;animation:curPulse 1s ease-in-out infinite}
+.cake-slot.drag-source{opacity:.5;-webkit-transform:scale(.92);transform:scale(.92);border:2px dashed #FFD700!important;-webkit-transition:none;transition:none}
+.cake-slot.drag-over{border:2px solid #FFD700!important;background:rgba(255,215,0,.18)!important;-webkit-transform:scale(1.06);transform:scale(1.06)}
 @-webkit-keyframes curPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,215,0,0)}}
 @keyframes curPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.4)}50%{box-shadow:0 0 0 5px rgba(255,215,0,0)}}
 .slot-emoji{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;width:100%;-webkit-flex:0 0 65%;flex:0 0 65%;min-height:0;font-size:clamp(.75rem,2.5vmin,1.6rem)}
@@ -192,6 +194,8 @@ html{margin:0;padding:0;width:100%;height:100%;background:#0f0720}body{margin:0;
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0) translateX(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg) translateX(var(–tx));opacity:0}}
 .flash-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:50;opacity:0;pointer-events:none;-webkit-transition:opacity .1s;transition:opacity .1s}
 .flash-overlay.show{opacity:1}
+.btn-start-turn{background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:50px;padding:7px 22px;font-family:‘Quicksand’,sans-serif;font-size:clamp(.8rem,2vh,1.1rem);font-weight:700;color:#1a0d35;cursor:pointer;-webkit-flex-shrink:0;flex-shrink:0;-webkit-transition:transform .15s;transition:transform .15s;display:block}
+.btn-start-turn:active{-webkit-transform:scale(.95);transform:scale(.95)}
 .ripple{position:fixed;border-radius:50%;pointer-events:none;z-index:500;-webkit-transform:scale(0);transform:scale(0);-webkit-animation:rippleOut .6s ease-out forwards;animation:rippleOut .6s ease-out forwards;width:10px;height:10px;margin-left:-5px;margin-top:-5px}
 /* Safe area - çentikli telefonlar için */
 #screen-intro,#screen-parent,#screen-result{
@@ -289,13 +293,14 @@ padding-top:env(safe-area-inset-top);
         <div class="cp-name" id="cp-name">—</div>
         <div class="cp-sub" id="cp-sub">keki ısırıyor 🎂</div>
       </div>
-      <div class="timer-ring-wrap">
+      <div class="timer-ring-wrap" id="timer-ring-wrap">
         <svg width="52" height="52" viewBox="0 0 80 80">
           <circle class="timer-circle-bg" cx="40" cy="40" r="34" stroke-width="6"/>
           <circle class="timer-circle-fg" id="timer-circle" cx="40" cy="40" r="34" stroke-width="6" stroke-dasharray="213.6" stroke-dashoffset="0"/>
         </svg>
         <div class="timer-text" id="timer-text">10</div>
       </div>
+      <button class="btn-start-turn" id="btn-start-turn" onclick="startTurn()">▶ Başla</button>
       <div class="timer-done-label" id="timer-done-label" style="display:none">⬇️ Rengi seç!</div>
     </div>
     <div class="cake-grid" id="cake-grid"></div>
@@ -478,7 +483,7 @@ function startGame(){
   TOTAL=selectedCount;bites=[];pinkCount=0;blueCount=0;
   assignNames();buildGrid();buildTimeline();updateUI();
   showScreen('screen-game');
-  startTimer();
+  showStartButton();
 }
 function restartGame(){
   stopTimer();if(parentTimerInterval){clearInterval(parentTimerInterval);parentTimerInterval=null;}
@@ -511,11 +516,71 @@ function buildGrid(){
     var isP=(i>=TOTAL-2);
     s.className='cake-slot'+(i===0?' current-slot':'');
     s.id='slot-'+i;
+    s.setAttribute('data-idx',i);
     var gName=assignedNames[i]||'';
     var icon=isP?'⭐':'🎂';
     s.innerHTML='<span class="slot-emoji">'+icon+'</span><span class="slot-name">'+gName+'</span>';
+    // Sadece oyun başlamadıysa (bites boşsa) drag aktif
+    if(bites.length===0&&!isP){
+      setupDrag(s,i);
+    }
     g.appendChild(s);
   }
+}
+
+var dragSrc=null;
+function setupDrag(el,idx){
+  var holdTimer=null;
+  var isDragging=false;
+
+  el.addEventListener('touchstart',function(e){
+    holdTimer=setTimeout(function(){
+      isDragging=true;
+      dragSrc=idx;
+      el.classList.add('drag-source');
+      navigator.vibrate&&navigator.vibrate(40);
+    },400);
+  },false);
+
+  el.addEventListener('touchend',function(e){
+    clearTimeout(holdTimer);
+    if(!isDragging)return;
+    isDragging=false;
+    el.classList.remove('drag-source');
+    // Hangi slot üzerinde bırakıldı?
+    var touch=e.changedTouches[0];
+    var target=document.elementFromPoint(touch.clientX,touch.clientY);
+    if(target){
+      var slot=target.closest('.cake-slot');
+      if(slot&&slot.id!==el.id){
+        var destIdx=parseInt(slot.getAttribute('data-idx'));
+        if(!isNaN(destIdx)&&destIdx<TOTAL-2){
+          // Swap names
+          var tmp=assignedNames[dragSrc];
+          assignedNames[dragSrc]=assignedNames[destIdx];
+          assignedNames[destIdx]=tmp;
+          buildGrid();
+          showCurrentPerson(0);
+        }
+      }
+    }
+    dragSrc=null;
+  },false);
+
+  el.addEventListener('touchmove',function(e){
+    if(isDragging){
+      e.preventDefault();
+      // Üzerine gelinen slotu highlight et
+      var touch=e.touches[0];
+      var els=document.querySelectorAll('.cake-slot');
+      for(var i=0;i<els.length;i++){els[i].classList.remove('drag-over');}
+      var target=document.elementFromPoint(touch.clientX,touch.clientY);
+      if(target){
+        var slot=target.closest('.cake-slot');
+        if(slot&&slot.id!==el.id)slot.classList.add('drag-over');
+      }
+    }
+  },{passive:false});
 }
 function buildTimeline(){
   var tl=document.getElementById('mini-timeline');tl.innerHTML='';
@@ -524,6 +589,29 @@ function buildTimeline(){
     d.className='mini-dot'+(i===0?' current':' empty');
     d.id='dot-'+i;tl.appendChild(d);
   }
+}
+
+/* BAŞLA BUTONU */
+function showStartButton(){
+  stopTimer();
+  var btn=document.getElementById('btn-start-turn');
+  var ring=document.getElementById('timer-ring-wrap');
+  var dl=document.getElementById('timer-done-label');
+  if(btn)btn.style.display='block';
+  if(ring)ring.style.display='none';
+  if(dl)dl.style.display='none';
+  // Timer'ı sıfırla görsel olarak
+  timerVal=10;
+  var c=document.getElementById('timer-circle');
+  if(c){c.style.stroke='';c.style.strokeDashoffset='0';c.classList.remove('urgent');}
+  var t=document.getElementById('timer-text');if(t)t.textContent='10';
+}
+function startTurn(){
+  var btn=document.getElementById('btn-start-turn');
+  var ring=document.getElementById('timer-ring-wrap');
+  if(btn)btn.style.display='none';
+  if(ring)ring.style.display='block';
+  startTimer();
 }
 
 /* TIMER */
@@ -591,7 +679,7 @@ function bite(color,evt){
     setTimeout(showResult,800);
     return;
   }
-  showCurrentPerson(next);startTimer();
+  showCurrentPerson(next);showStartButton();
 }
 
 function undoBite(){
@@ -612,7 +700,7 @@ function undoBite(){
     document.getElementById('dot-'+(idx+1)).className='mini-dot empty';
   }
   document.getElementById('dot-'+idx).className='mini-dot current';
-  showCurrentPerson(idx);updateUI();startTimer();
+  showCurrentPerson(idx);updateUI();showStartButton();
 }
 
 function showCurrentPerson(idx){
